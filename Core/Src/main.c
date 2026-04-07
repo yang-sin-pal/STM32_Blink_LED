@@ -89,28 +89,20 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
+	
 	RGB led;
-	
 	GPIO_TypeDef *port = GPIOB;
-	uint16_t pins[] = {GPIO_PIN_1, GPIO_PIN_0, GPIO_PIN_2};
-	
+	uint16_t pins[] = {LED_R_Pin, LED_G_Pin, LED_B_Pin};
 	rgb_init(&led, port, pins);
+	
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-		rgb_toggle(&led, RED);
-		
-    /* USER CODE END WHILE */
-//		Color colors[] = {RED,GREEN,BLUE,WHITE,YELLOW,PURPLE,OFF};
-//		for(int i = 0; i < sizeof(colors); i++)
-//    {
-//			rgb_setcolor(&led,colors[i]);
-//			HAL_Delay(1000);
-//    }
-    /* USER CODE BEGIN 3 */
+			rgb_nonBlockingBlink(&led, 2000, 100, RED, GREEN);
+
   }
   /* USER CODE END 3 */
 }
@@ -118,7 +110,7 @@ int main(void)
 /**
   * @brief System Clock Configuration
   * @retval None
-  */
+  */ 
 void SystemClock_Config(void)
 {
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
