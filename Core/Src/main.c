@@ -19,10 +19,10 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 
-
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "led.h"
+#include "button.h"
 
 /* USER CODE END Includes */
 
@@ -91,9 +91,15 @@ int main(void)
   /* USER CODE BEGIN 2 */
 	
 	RGB led;
-	GPIO_TypeDef *port = GPIOB;
-	uint16_t pins[] = {LED_R_Pin, LED_G_Pin, LED_B_Pin};
-	rgb_init(&led, port, pins);
+	GPIO_TypeDef* ledPort = GPIOB;
+	uint16_t ledPins[] = { LED_G_Pin, LED_R_Pin, LED_B_Pin};
+	rgb_init(&led, ledPort, ledPins);
+	//rgb_setcolor (&led, OFF);
+	
+	BTN button;
+	GPIO_TypeDef* buttonPort = GPIOA;
+	uint16_t buttonPins[] = {BT1_Pin, BT2_Pin};
+	btn_init(&button, buttonPort, buttonPins);
 	
   /* USER CODE END 2 */
 
@@ -101,8 +107,9 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-			rgb_nonBlockingBlink(&led, 2000, 100, RED, GREEN);
-
+    /* USER CODE END WHILE */
+	btn_setColors(&button, &led, RED, GREEN);
+    /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
 }
@@ -110,7 +117,7 @@ int main(void)
 /**
   * @brief System Clock Configuration
   * @retval None
-  */ 
+  */
 void SystemClock_Config(void)
 {
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
@@ -173,14 +180,20 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOA_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, LED_R_Pin|LED_G_Pin|LED_B_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, LED_G_Pin|LED_R_Pin|LED_B_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : LED_R_Pin LED_G_Pin LED_B_Pin */
-  GPIO_InitStruct.Pin = LED_R_Pin|LED_G_Pin|LED_B_Pin;
+  /*Configure GPIO pins : LED_G_Pin LED_R_Pin LED_B_Pin */
+  GPIO_InitStruct.Pin = LED_G_Pin|LED_R_Pin|LED_B_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : BT1_Pin BT2_Pin */
+  GPIO_InitStruct.Pin = BT1_Pin|BT2_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
 /* USER CODE BEGIN MX_GPIO_Init_2 */
 /* USER CODE END MX_GPIO_Init_2 */

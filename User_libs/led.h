@@ -6,7 +6,7 @@
 
 typedef enum
 {
-	RED,
+	RED = 0,
 	GREEN,
 	BLUE,
 	WHITE,
@@ -18,9 +18,9 @@ typedef enum
 
 typedef struct 
 {
-	GPIO_TypeDef *GPIO_red;
-	GPIO_TypeDef *GPIO_green;
-	GPIO_TypeDef *GPIO_blue;
+	GPIO_TypeDef* GPIO_red;
+	GPIO_TypeDef* GPIO_green;
+	GPIO_TypeDef* GPIO_blue;
 	
 	uint8_t num_of_led;
 	uint16_t red_pin;
@@ -38,7 +38,7 @@ typedef struct
 } RGB;
 
 void rgb_init(RGB *rgb, GPIO_TypeDef *gpio_port, uint16_t pins[]);
-void rgb_setcolor (RGB *rgb, Color color);
+void rgb_setColor (RGB *rgb, Color color);
 void rgb_toggle(RGB *rgb, Color color);
 void rgb_blink(RGB *rgb, Color color, uint16_t blink_time);
 
