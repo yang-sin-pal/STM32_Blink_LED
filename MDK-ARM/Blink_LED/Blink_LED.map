@@ -33,6 +33,7 @@ Section Cross References
     main.o(.text.main) refers to led.o(.text.rgb_init) for rgb_init
     main.o(.text.main) refers to button.o(.text.btn_init) for btn_init
     main.o(.text.main) refers to button.o(.text.btn_setColors) for btn_setColors
+    main.o(.text.main) refers to led.o(.text.rgb_nonBlockingBlink) for rgb_nonBlockingBlink
     main.o(.ARM.exidx.text.main) refers to main.o(.text.main) for [Anonymous Symbol]
     main.o(.text.SystemClock_Config) refers to rt_memclr_w.o(.text) for __aeabi_memclr4
     main.o(.text.SystemClock_Config) refers to stm32l4xx_hal_pwr_ex.o(.text.HAL_PWREx_ControlVoltageScaling) for HAL_PWREx_ControlVoltageScaling
