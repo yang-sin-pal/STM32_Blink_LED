@@ -115,41 +115,31 @@ int main(void)
 	
   while (1)
   {
-		if (!HAL_GPIO_ReadPin(button.GPIO_btn1, button.btn1_Pin))
-	{
-		HAL_Delay(20);
-		//rgb_toggle(&led, RED);
-		if(!HAL_GPIO_ReadPin(button.GPIO_btn1, button.btn1_Pin))
-		{
-			//count++;
+	bool curState = !HAL_GPIO_ReadPin(button.GPIO_btn1, button.btn1_Pin);
+	if (curState != preState)
+  {
+		preState = curState;
+		is_debouncing = true;
+		start_debouning = HAL_GetTick();
+  }
+	if (is_debouncing && ((HAL_GetTick() - start_debouning) >= 15))
+  {
+		is_debouncing = false;
+		
+		if (curState)
+    {
+			//is_pressed = btn_isPressed(&button);
+			is_pressed = true;
+			is_released = false;
 			rgb_toggle(&led, RED);
-		while(!HAL_GPIO_ReadPin(button.GPIO_btn1, button.btn1_Pin));
+    }
+		else
+		{
+			//is_pressed = btn_isPressed(&button);
+			is_pressed = false;
+			is_released = true;
 		}
-	}
-	
-//	bool curState = !HAL_GPIO_ReadPin(button.GPIO_btn1, button.btn1_Pin);
-//	if (curState != preState)
-//  {
-//		preState = curState;
-//		is_debouncing = true;
-//		start_debouning = HAL_GetTick();
-//  }
-//	if (is_debouncing && ((HAL_GetTick() - start_debouning) >= 15))
-//  {
-//		is_debouncing = false;
-//		
-//		if (curState)
-//    {
-//			//is_pressed = btn_isPressed(&button);
-//			bool is_pressed = false;
-//			bool is_released = true;
-//			rgb_toggle(&led, RED);
-//    }
-//		else
-//		{
-//			//is_pressed = btn_isPressed(&button);
-//		}
-//  }
+  }
 	
   } 
   /* USER CODE END 3 */
