@@ -18,6 +18,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include <stdbool.h>
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -100,17 +101,57 @@ int main(void)
 	GPIO_TypeDef* buttonPort = GPIOA;
 	uint16_t buttonPins[] = {BT1_Pin, BT2_Pin};
 	btn_init(&button, buttonPort, buttonPins);
-	
+	uint32_t now = HAL_GetTick();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+	uint8_t count = 0;
+	bool preState = 0;
+	bool is_debouncing = false;
+	bool is_pressed = false;
+	bool is_released = true;
+	uint32_t start_debouning = HAL_GetTick();
+	
   while (1)
   {
-    /* USER CODE END WHILE */
-	btn_setColors(&button, &led, RED, GREEN);
-    /* USER CODE BEGIN 3 */
-  }
+		if (!HAL_GPIO_ReadPin(button.GPIO_btn1, button.btn1_Pin))
+	{
+		HAL_Delay(20);
+		//rgb_toggle(&led, RED);
+		if(!HAL_GPIO_ReadPin(button.GPIO_btn1, button.btn1_Pin))
+		{
+			//count++;
+			rgb_toggle(&led, RED);
+		while(!HAL_GPIO_ReadPin(button.GPIO_btn1, button.btn1_Pin));
+		}
+	}
+	
+//	bool curState = !HAL_GPIO_ReadPin(button.GPIO_btn1, button.btn1_Pin);
+//	if (curState != preState)
+//  {
+//		preState = curState;
+//		is_debouncing = true;
+//		start_debouning = HAL_GetTick();
+//  }
+//	if (is_debouncing && ((HAL_GetTick() - start_debouning) >= 15))
+//  {
+//		is_debouncing = false;
+//		
+//		if (curState)
+//    {
+//			//is_pressed = btn_isPressed(&button);
+//			bool is_pressed = false;
+//			bool is_released = true;
+//			rgb_toggle(&led, RED);
+//    }
+//		else
+//		{
+//			//is_pressed = btn_isPressed(&button);
+//		}
+//  }
+	
+  } 
   /* USER CODE END 3 */
 }
 

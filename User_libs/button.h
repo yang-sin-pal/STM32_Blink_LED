@@ -12,9 +12,12 @@ typedef struct
 	uint16_t btn1_Pin;
 	uint16_t btn2_Pin;
 	
+	bool is_pressed;
 } BTN;
 
 void btn_init(BTN *btn, GPIO_TypeDef* port, uint16_t pins[]);
-void btn_setColors(BTN *btn, RGB *rgb, Color color1, Color color2);
+void btn_setColor(BTN *btn, RGB *rgb, Color color1, Color color2);
+void btn_toggle10hz(BTN *btn, RGB *rgb, Color color1, Color color2, uint32_t *lastTime);
+bool btn_isPressed(BTN *btn);
 
 #endif
