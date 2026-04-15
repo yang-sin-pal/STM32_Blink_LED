@@ -95,52 +95,20 @@ int main(void)
 	GPIO_TypeDef* ledPort = GPIOB;
 	uint16_t ledPins[] = { LED_G_Pin, LED_R_Pin, LED_B_Pin};
 	rgb_init(&led, ledPort, ledPins);
-	//rgb_setcolor (&led, OFF);
 	
 	BTN button;
 	GPIO_TypeDef* buttonPort = GPIOA;
 	uint16_t buttonPins[] = {BT1_Pin, BT2_Pin};
 	btn_init(&button, buttonPort, buttonPins);
-	uint32_t now = HAL_GetTick();
+	
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-	uint8_t count = 0;
-	bool preState = 0;
-	bool is_debouncing = false;
-	bool is_pressed = false;
-	bool is_released = true;
-	uint32_t start_debouning = HAL_GetTick();
 	
   while (1)
   {
-	bool curState = !HAL_GPIO_ReadPin(button.GPIO_btn1, button.btn1_Pin);
-	if (curState != preState)
-  {
-		preState = curState;
-		is_debouncing = true;
-		start_debouning = HAL_GetTick();
-  }
-	if (is_debouncing && ((HAL_GetTick() - start_debouning) >= 15))
-  {
-		is_debouncing = false;
-		
-		if (curState)
-    {
-			//is_pressed = btn_isPressed(&button);
-			is_pressed = true;
-			is_released = false;
-			rgb_toggle(&led, RED);
-    }
-		else
-		{
-			//is_pressed = btn_isPressed(&button);
-			is_pressed = false;
-			is_released = true;
-		}
-  }
-	
+		btn_handle(&button, &led);
   } 
   /* USER CODE END 3 */
 }
