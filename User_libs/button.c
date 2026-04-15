@@ -13,6 +13,7 @@ void btn_init(BTN *btn, GPIO_TypeDef* port, uint16_t pins[])
 	btn->preState_btn1 = false;
 	btn->curState_btn1 = false;
 	btn->is_debouncing_btn1 = false;
+	btn->is_pressing_btn1 = false;
 }
 
 void btn_handle(BTN *btn, RGB *rgb)
@@ -40,7 +41,7 @@ void btn_set_state(BTN *btn)
   	default:
   		break;
   }
-	btn->is_pressed_btn1 = HAL_GetTick();
+	btn->time_after_pressed_btn1 = HAL_GetTick();
 }
 
 void btn_handle_state(BTN *btn, RGB *rgb)
@@ -73,18 +74,24 @@ void btn1_handle_debounce(BTN *btn)
 		btn->is_debouncing_btn1 = true;
 		btn->time_start_press = HAL_GetTick();
   }
-	if (btn->is_debouncing_btn1 && ((HAL_GetTick() - btn->time_start_press) >= 15))
+	
+	if (btn->is_debouncing_btn1 && ((HAL_GetTick() - btn->time_start_press) >= 15)) //after debouncing 15ms
   {
 		btn->is_debouncing_btn1 = false; 
 		
-		if (btn->curState_btn1)
+		if (btn->curState_btn1) // check if still pressing
     {
 			btn_set_state(btn);
+			btn->is_pressing_btn1 = true;
     }
 		else
 		{
-			btn->is_pressed_btn1 = false;
+			btn->is_pressing_btn1 = false;
 		}
+  }
+	if (btn->is_pressing_btn1 && ((HAL_GetTick() - btn->time_start_press) >= 3000)) //check if still pressing button for 3s
+  {
+		btn->state = STATE0;
   }
 }
 
@@ -105,28 +112,28 @@ void btn_setColor(BTN *btn, RGB *rgb, Color color1, Color color2)
 
 void btn_toggle1hz(BTN *btn, RGB *rgb, Color color)
 {
-	if ((HAL_GetTick() - btn->is_pressed_btn1) >= 1000 )
+	if ((HAL_GetTick() - btn->time_after_pressed_btn1) >= 1000 )
     {
 			rgb_toggle(rgb, color);
-			btn->is_pressed_btn1 = HAL_GetTick();
+			btn->time_after_pressed_btn1 = HAL_GetTick();
     }
 }
 
 void btn_toggle5hz(BTN *btn,  RGB *rgb, Color color)
 {
-	if ((HAL_GetTick() - btn->is_pressed_btn1) >= 200 )
+	if ((HAL_GetTick() - btn->time_after_pressed_btn1) >= 200 )
     {
 			rgb_toggle(rgb, color);
-			btn->is_pressed_btn1 = HAL_GetTick();
+			btn->time_after_pressed_btn1 = HAL_GetTick();
     }
 }
 
 void btn_toggle10hz(BTN *btn, RGB *rgb, Color color)
 {
-	if ((HAL_GetTick() - btn->is_pressed_btn1) >= 100 )
+	if ((HAL_GetTick() - btn->time_after_pressed_btn1) >= 100 )
     {
 			rgb_toggle(rgb, color);
-			btn->is_pressed_btn1 = HAL_GetTick();
+			btn->time_after_pressed_btn1 = HAL_GetTick();
     }
 }
 

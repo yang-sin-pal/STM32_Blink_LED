@@ -24,10 +24,11 @@ typedef struct
 	State state;
 	
 	uint32_t time_start_press;
-	uint32_t is_pressed_btn1;
+	uint32_t time_after_pressed_btn1;
 	bool preState_btn1;
 	bool curState_btn1;
 	bool is_debouncing_btn1;
+	bool is_pressing_btn1;
 	
 } BTN;
 
